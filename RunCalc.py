@@ -2,13 +2,15 @@ from tkinter import *
 
 mile = 1.609344
 
-def calc_times(metric,pace,minutes,seconds,distances,fields):
+def calc_times(metric,pace,minutes,seconds,distances,dst,fields):
 	minutes = float(minutes)
 	seconds = float(seconds)
+	dst = float(dst)
 	if metric==1:
 		secs = minutes*60 + seconds
 	else:
 		secs = (minutes*60 + seconds)/mile
+	distances[-1] = dst
 	n=0
 
 	#pace
@@ -119,9 +121,9 @@ m.grid(row=crow,column=3, sticky=E)
 ddots[1].grid(row=crow,column=4, sticky=E)
 s.grid(row=crow,column=5, sticky=E)
 
-distances = [5,10,21.0975,42.195]
+distances = [5,10,21.0975,42.195,50,100,160,999.9]
 fields = []
-for d in distances:
+for d in distances[:-1]:
 	fields.append([IntVar(),IntVar(),IntVar()])
 	empty_field = [Label(frame3, text=d), Label(frame3, textvariable=fields[-1][0]), Label(frame3, textvariable=fields[-1][1]), Label(frame3, textvariable=fields[-1][2])]
 	ddots = [Label(frame3, text=':'),Label(frame3, text=':')]
@@ -133,7 +135,20 @@ for d in distances:
 	ddots[1].grid(row=crow,column=4, sticky=E)
 	empty_field[3].grid(row=crow,column=5, sticky=E)
 
-submit = Button(frame2, text='submit', command = lambda: calc_times(metric.get(),pace,minutes.get(),seconds.get(),distances,fields))
+dst = Entry(frame3,width=5)
+dst.insert(0,str(round(distances[-1],1)))
+fields.append([IntVar(),IntVar(),IntVar()])
+empty_field = [dst, Label(frame3, textvariable=fields[-1][0]), Label(frame3, textvariable=fields[-1][1]), Label(frame3, textvariable=fields[-1][2])]
+ddots = [Label(frame3, text=':'),Label(frame3, text=':')]
+crow +=1
+empty_field[0].grid(row=crow,column=0, sticky=W)
+empty_field[1].grid(row=crow,column=1, sticky=E)
+ddots[0].grid(row=crow,column=2, sticky=E)
+empty_field[2].grid(row=crow,column=3, sticky=E)
+ddots[1].grid(row=crow,column=4, sticky=E)
+empty_field[3].grid(row=crow,column=5, sticky=E)
+
+submit = Button(frame2, text='submit', command = lambda: calc_times(metric.get(),pace,minutes.get(),seconds.get(),distances,dst.get(),fields))
 submit.grid(row=submit_row,columnspan=5)
 
 #keep window open
